@@ -90,10 +90,12 @@ Components (already built in POC):
 - Update packages on all nodes
 - Disable swap on all nodes
 - Configure /etc/hosts on all nodes (including Ubuntu desktop):
-192.168.50.10  ubuntu-desktop
-192.168.50.11  pi-control
-192.168.50.12  pi-worker1
-192.168.50.13  pi-worker2
+Device	        IP
+ubuntu-desktop	192.168.68.55 (already)
+pi-control	    192.168.68.60
+pi-worker1	    192.168.68.61
+pi-worker2	    192.168.68.62
+
 - Prepare USB stick:
   - Format USB stick (ext4)
   - Mount on pi-worker1
