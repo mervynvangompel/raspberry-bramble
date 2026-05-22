@@ -1,0 +1,36 @@
+# frontend.yaml
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dog-feeding-frontend
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dog-feeding-frontend
+  template:
+    metadata:
+      labels:
+        app: dog-feeding-frontend
+    spec:
+      containers:
+      - name: frontend
+        image: dog-feeding-frontend:latest
+        imagePullPolicy: Never  # Use local image
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: dog-feeding-frontend
+  namespace: default
+spec:
+  selector:
+    app: dog-feeding-frontend
+  ports:
+  - port: 80
+    targetPort: 80
+  type: ClusterIP
