@@ -2,9 +2,12 @@
 ```
 raspberry-bramble/
 ├── docs/               # Documentation
-│   ├── pi-setup-procedure.md
 │   ├── architecture.md
-│   └── troubleshooting.md
+│   ├── branchnaming.md
+│   ├── execution_plan.md
+│   ├── pi_setup.md
+│   ├── raspberry_bramble_readme.md
+│   ├── repo_structure
 ├── k8s/                # Kubernetes manifests
 │   ├── phase1-single-node/
 │   ├── phase2-cluster/
