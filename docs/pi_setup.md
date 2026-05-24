@@ -13,7 +13,7 @@ Complete steps to flash and configure each Raspberry Pi for the cluster.
 5. **Click "Next"** and write to SD card
 6. Wait for write and verification to complete
 
-*Note: We're NOT using the Imager's customization settings as they don't work reliably.*
+*Note: We're NOT using the Imager's customization settings as they don't work reliably, see docs/troubleshooting.md .*
 
 ---
 
@@ -98,7 +98,7 @@ sudo hostnamectl set-hostname pi-control  # or pi-worker1, pi-worker2
 # Edit /etc/hosts
 sudo nano /etc/hosts
 ```
-
+Set the localhost IP:
 Change the line `127.0.1.1 raspberrypi` to:
 127.0.1.1 pi-control  # or pi-worker1, pi-worker2
 
