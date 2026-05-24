@@ -1,4 +1,4 @@
-## Raspberry Pi Imager Settings Not Applied
+## 1. Raspberry Pi Imager Settings Not Applied
 
 **Problem:**
 - Raspberry Pi Imager's OS customization settings (SSH, username, WiFi) don't apply reliably
@@ -37,3 +37,5 @@ Manually configure via boot partition files instead of relying on Imager setting
 **Prevention:**
 Always use manual file-based configuration instead of Raspberry Pi Imager's built-in settings.
 
+## 2. nmcli instead of DHCP
+To be completed
