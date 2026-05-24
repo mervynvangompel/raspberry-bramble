@@ -13,7 +13,7 @@ Complete steps to flash and configure each Raspberry Pi for the cluster.
 5. **Click "Next"** and write to SD card
 6. Wait for write and verification to complete
 
-*Note: We're NOT using the Imager's customization settings as they don't work reliably.*
+*Note: We're NOT using the Imager's customization settings as they don't work reliably, see docs/troubleshooting.md .*
 
 ---
 
@@ -32,6 +32,8 @@ ls -la /media/mervyn/bootfs/ | grep ssh
 ---
 
 ## Step 3: Create User Account
+
+You can use scripts/prepare_pi.sh to create the ssh and userconf.txt files. Below are the manual steps to create the user account and enable ssh.
 
 Generate password hash on your Ubuntu desktop:
 
@@ -98,7 +100,7 @@ sudo hostnamectl set-hostname pi-control  # or pi-worker1, pi-worker2
 # Edit /etc/hosts
 sudo nano /etc/hosts
 ```
-
+Set the localhost IP:
 Change the line `127.0.1.1 raspberrypi` to:
 127.0.1.1 pi-control  # or pi-worker1, pi-worker2
 
@@ -113,16 +115,53 @@ For each Pi, assign the appropriate static IP:
 - `pi-worker1`: 192.168.68.12
 - `pi-worker2`: 192.168.68.13
 
+PIs use nmcli so setting /etc/dhcpcd.conf won't work
+
+### Set a Static IP on Raspberry Pi Using NetworkManager (`nmcli`)
+
+Find the NetworkManager connection name
+
 ```bash
-# Edit dhcpcd config
-sudo nano /etc/dhcpcd.conf
+nmcli connection show
 ```
-Add these lines at the end (adjust IP for each Pi):
-interface eth0
-static ip_address=192.168.68.11/22  # Change to .12 or .13 for workers
-static routers=192.168.68.1
-static domain_name_servers=192.168.68.1 8.8.8.8
-Save and exit.
+
+You will probably see something like:
+
+```text
+Wired connection 1
+```
+### Configure the static IP
+
+```bash
+sudo nmcli con mod "Wired connection 1" ipv4.addresses [newIP]/22
+sudo nmcli con mod "Wired connection 1" ipv4.gateway 192.168.68.1
+sudo nmcli con mod "Wired connection 1" ipv4.dns "192.168.68.1 8.8.8.8"
+sudo nmcli con mod "Wired connection 1" ipv4.method manual
+```
+
+### Reboot the Pi
+
+```bash
+sudo reboot
+```
+### Reconnect using the new IP
+
+```bash
+ssh mervyn@[newIP]
+```
+
+---
+
+### Verify the new address
+
+```bash
+ip addr show eth0
+```
+
+You should see something like:
+
+```text
+inet 192.168.68.12/22
 
 ---
 
@@ -131,7 +170,7 @@ Save and exit.
 On **each Pi**, add all cluster nodes:
 
 ```bash
-sudo nano /etc/hosts
+sudo vim /etc/hosts
 ```
 
 Add these lines:
