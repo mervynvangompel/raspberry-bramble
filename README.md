@@ -8,11 +8,12 @@ Quick highlights:
 - PostgreSQL for persistence, Grafana for observability
 
 Project status:
+- Phase 0 complete: Raspberry Pi hardware prepared
 - POC built and tested locally
-- Raspberry Pi hardware prepared
 - Next: single-node k3s deployment → expand to 3 nodes → add monitoring
 
 Docs and next steps:
+- Phase 0 retrospective: [docs/linkedin/phase0.md](docs/linkedin/phase0.md)
 - Architecture & detailed plan: [docs/architecture.md](docs/architecture.md)
 - Execution plan: [docs/execution_plan.md](docs/execution_plan.md)
 - Pi setup & troubleshooting: [docs/pi_setup.md](docs/pi_setup.md) and [docs/troubleshooting.md](docs/troubleshooting.md)
