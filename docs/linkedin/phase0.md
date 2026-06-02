@@ -1,3 +1,0 @@
-# Phase 0 — Quick LinkedIn post
-
-Phase 0 complete: flashed and configured 3× Raspberry Pis (control + 2 workers), set static IPs and verified SSH access. Learned that Raspberry Pi Imager's GUI customizations are unreliable — I automated boot-partition configuration with `scripts/prepare_pi.sh` and switched to `nmcli` for static IPs. Next: deploy single-node k3s and run the POC app. Full retrospective in `docs/linkedin/retrospectives/phase0.md`.

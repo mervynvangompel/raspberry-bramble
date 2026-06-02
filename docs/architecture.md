@@ -74,14 +74,17 @@ Networking:
 Phase 1 (Single Node):
 - local-path provisioner (default with k3s)
 - PostgreSQL on local storage
+- See [Phase 1 execution plan](docs/execution_plan/phase1.md)
 
 Phase 2 (Cluster):
 - USB stick mounted on pi-worker1 for PostgreSQL
 - local-path for other workloads
+- See [Phase 2 execution plan](docs/execution_plan/phase2.md)
 
 Phase 3 (Optional - Advanced):
 - Migrate to external SSD
 - Consider Longhorn for distributed storage
+- See [Phase 3 execution plan](docs/execution_plan/phase3.md)
 
 ### Platform Layer
 - PostgreSQL (single replica initially)
@@ -112,6 +115,19 @@ Components (already built in POC):
 ---
 
 ## Success Criteria Checklist
+
+For detailed phase tasks and status, see the execution plan documents:
+- [Phase 0](docs/execution_plan/phase0.md)
+- [Phase 1](docs/execution_plan/phase1.md)
+- [Phase 2](docs/execution_plan/phase2.md)
+- [Phase 3](docs/execution_plan/phase3.md)
+- [Phase 4](docs/execution_plan/phase4.md)
+- [Phase 5](docs/execution_plan/phase5.md)
+
+**Phase 0:**
+- [x] Raspberry Pi hardware prepared
+- [x] SSH access verified for all nodes
+- [x] Static IPs assigned and hostnames configured
 
 **Phase 1:**
 - [ ] Single-node k3s cluster running
