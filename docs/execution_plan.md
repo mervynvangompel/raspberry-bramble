@@ -10,9 +10,9 @@ Tasks:
 - [x] Boot Pis and verify SSH access
 - [x] Set hostnames (pi-control, pi-worker1, pi-worker2)
 - [x] Configure static IPs (.11, .12, .13)
-- [ ] Update packages on all nodes
-- [ ] Disable swap on all nodes
-- [ ] Configure /etc/hosts on all nodes for cluster communication
+- [x] Update packages on all nodes
+- [x] Disable swap on all nodes
+- [x] Configure /etc/hosts on all nodes for cluster communication
 
 **Current Status:**
 - pi-control: Configured, SSH working ✅
