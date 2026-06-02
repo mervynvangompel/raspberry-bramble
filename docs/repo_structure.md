@@ -1,13 +1,18 @@
 ## Repo Structure
 ```
 raspberry-bramble/
-├── docs/               # Documentation
+├── README.md           # Project entry (visitor-facing)
+├── docs/               # Documentation and design notes
 │   ├── architecture.md
 │   ├── branchnaming.md
 │   ├── execution_plan.md
 │   ├── pi_setup.md
-│   ├── raspberry_bramble_readme.md
-│   ├── repo_structure
+│   ├── repo_structure.md
+│   └── troubleshooting.md
+│   └── linkedin/       # LinkedIn posts + retrospectives
+│       ├── phase0.md
+│       └── retrospectives/
+│           └── phase0.md
 ├── k8s/                # Kubernetes manifests
 │   ├── phase1-single-node/
 │   ├── phase2-cluster/
@@ -24,8 +29,9 @@ raspberry-bramble/
 │       ├── index.html
 │       ├── nginx.conf
 │       └── Dockerfile.frontend
-├── terraform/          # IaC (Phase 5)
-├── ansible/            # Provisioning playbooks (Phase 5)
-├── images/             # Screenshots for LinkedIn
-└── scripts/            # Helper scripts
+├── PoC/                # Proof-of-concept artifacts (manifests, Dockerfile, nginx etc.)
+├── terraform/          # IaC (future/Phase 5)
+├── infra/              # Infra configs
+├── images/             # Screenshots for LinkedIn and docs
+└── scripts/            # Helper scripts (prepare_pi.sh, etc.)
 ```
