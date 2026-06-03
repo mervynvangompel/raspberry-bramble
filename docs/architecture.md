@@ -124,34 +124,6 @@ For detailed phase tasks and status, see the execution plan documents:
 - [Phase 4](docs/execution_plan/phase4.md)
 - [Phase 5](docs/execution_plan/phase5.md)
 
-**Phase 0:**
-- [x] Raspberry Pi hardware prepared
-- [x] SSH access verified for all nodes
-- [x] Static IPs assigned and hostnames configured
-
-**Phase 1:**
-- [ ] Single-node k3s cluster running
-- [ ] POC app deployed and accessible
-- [ ] Can add feeding data via web UI
-- [ ] Data persists across pod restarts
-
-**Phase 2:**
-- [ ] 3-node cluster is stable
-- [ ] PostgreSQL on USB storage
-- [ ] Understand pod scheduling
-
-**Phase 3:**
-- [ ] Grafana dashboard showing trends
-- [ ] Screenshots for LinkedIn
-
-**Phase 4:**
-- [ ] System stable for daily use
-- [ ] Basic auth configured
-- [ ] Backups working
-
-**Phase 5:**
-- [ ] Pick features based on interest
-
 ## Learning Outcomes
 
 By the end of this project, I hope to have a good understanding of:
