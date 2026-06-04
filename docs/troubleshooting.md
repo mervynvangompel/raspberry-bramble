@@ -39,3 +39,12 @@ Always use manual file-based configuration instead of Raspberry Pi Imager's buil
 
 ## 2. nmcli instead of DHCP
 To be completed
+
+## Phase 1
+
+### k3s not starting
+After installing k3s, it did not start. 
+Solution:
+sudo vim /boot/firmware/cmdline.txt
+Add to end of line: 
+cgroup_memory=1 cgroup_enable=memory
