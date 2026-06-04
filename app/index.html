@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dog Feeding Tracker</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2em;
+        }
+        
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 600;
+        }
+        
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 14px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        .feedings-list {
+            margin-top: 20px;
+        }
+        
+        .feeding-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .feeding-item .cups {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .feeding-item .time {
+            color: #999;
+            font-size: 0.9em;
+        }
+        
+        .feeding-item .notes {
+            margin-top: 8px;
+            color: #666;
+            font-style: italic;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .stat-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .stat-box .value {
+            font-size: 2.5em;
+            font-weight: bold;
+        }
+        
+        .stat-box .label {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+        
+        .success-message {
+            background: #4caf50;
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h1>🐕 Dog Feeding Tracker</h1>
+            <p class="subtitle">Keep track of your dog's meals</p>
+            
+            <div class="success-message" id="successMessage">
+                Feeding recorded successfully!
+            </div>
+            
+            <form id="feedingForm">
+                <div class="form-group">
+                    <label for="cups">Cups of Food</label>
+                    <input type="number" id="cups" step="0.25" min="0" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="notes">Notes (optional)</label>
+                    <textarea id="notes" rows="3" placeholder="e.g., Morning feeding, seemed extra hungry..."></textarea>
+                </div>
+                
+                <button type="submit">Record Feeding</button>
+            </form>
+        </div>
+        
+        <div class="card">
+            <h2>Today's Stats</h2>
+            <div class="stats" id="statsContainer">
+                <div class="stat-box">
+                    <div class="value" id="totalCups">0</div>
+                    <div class="label">Cups Today</div>
+                </div>
+                <div class="stat-box">
+                    <div class="value" id="feedingCount">0</div>
+                    <div class="label">Feedings Today</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h2>Recent Feedings</h2>
+            <div class="feedings-list" id="feedingsList">
+                <p style="color: #999;">Loading...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = '/api';
+        
+        // Load feedings on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            loadFeedings();
+            loadStats();
+        });
+        
+        // Handle form submission
+        document.getElementById('feedingForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const cups = parseFloat(document.getElementById('cups').value);
+            const notes = document.getElementById('notes').value;
+            
+            try {
+                const response = await fetch(`${API_URL}/feedings`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ cups, notes: notes || null }),
+                });
+                
+                if (response.ok) {
+                    // Show success message
+                    const successMsg = document.getElementById('successMessage');
+                    successMsg.style.display = 'block';
+                    setTimeout(() => {
+                        successMsg.style.display = 'none';
+                    }, 3000);
+                    
+                    // Clear form
+                    document.getElementById('feedingForm').reset();
+                    
+                    // Reload data
+                    loadFeedings();
+                    loadStats();
+                }
+            } catch (error) {
+                alert('Error recording feeding: ' + error.message);
+            }
+        });
+        
+        // Load feedings list
+        async function loadFeedings() {
+            try {
+                const response = await fetch(`${API_URL}/feedings?limit=10`);
+                const feedings = await response.json();
+                
+                const container = document.getElementById('feedingsList');
+                
+                if (feedings.length === 0) {
+                    container.innerHTML = '<p style="color: #999;">No feedings recorded yet.</p>';
+                    return;
+                }
+                
+                container.innerHTML = feedings.map(feeding => `
+                    <div class="feeding-item">
+                        <div class="cups">${feeding.cups} cups</div>
+                        <div class="time">${new Date(feeding.timestamp).toLocaleString()}</div>
+                        ${feeding.notes ? `<div class="notes">${feeding.notes}</div>` : ''}
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Error loading feedings:', error);
+            }
+        }
+        
+        // Load stats
+        async function loadStats() {
+            try {
+                const response = await fetch(`${API_URL}/feedings/stats`);
+                const data = await response.json();
+                
+                if (data.stats && data.stats.length > 0) {
+                    const today = data.stats[0];
+                    document.getElementById('totalCups').textContent = today.total_cups || 0;
+                    document.getElementById('feedingCount').textContent = today.feeding_count || 0;
+                }
+            } catch (error) {
+                console.error('Error loading stats:', error);
+            }
+        }
+    </script>
+</body>
+</html>
