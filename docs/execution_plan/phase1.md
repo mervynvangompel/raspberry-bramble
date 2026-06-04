@@ -176,6 +176,24 @@ SELECT * FROM feedings;
 ```
 > **Note:** If you see the nginx default page, do a hard refresh (Ctrl+Shift+R) — the browser may have cached it.
 
+## Managing the PostgreSQL password
+The POSTGRES_PASSWORD env var (injected via k8s secret) only sets the PostgreSQL user password on first initialisation when the data directory is empty. If you change the secret and restart the pod, PostgreSQL ignores the new value because the data directory already exists.
+To actually change the password on a running database:
+```bash
+bashkubectl exec -it deployment/postgres -- psql -U postgres -c "ALTER USER postgres PASSWORD 'newpassword';"
+bashkubectl rollout restart deployment/dog-feeding-api
+```
+Never store secrets in git. Remove the Secret block from postgres.yaml and create it manually instead:
+```bash
+kubectl create secret generic postgres-secret \
+  --from-literal=POSTGRES_PASSWORD=yourpassword
+```
+If the secret already exists: 
+```bash
+kubectl delete secret postgres-secret
+```
+
+
 ## Progress Summary
 
 | Task | Status |
