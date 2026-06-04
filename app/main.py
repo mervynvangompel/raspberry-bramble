@@ -1,4 +1,6 @@
 # main.py
+"""Backend API for the Dog Feeding Tracker app."""
+
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -10,7 +12,8 @@ import os
 
 app = FastAPI(title="Dog Feeding Tracker")
 
-# CORS for frontend
+# CORS middleware allows the frontend to make requests from any origin.
+# In production this should be tightened to only allow trusted origins.
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -18,8 +21,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Database connection
+# Database connection helper
 def get_db_connection():
+    """Open a PostgreSQL connection using environment variables."""
     return psycopg2.connect(
         host=os.getenv("DB_HOST", "postgres"),
         database=os.getenv("DB_NAME", "dogfeeding"),
@@ -28,7 +32,7 @@ def get_db_connection():
         cursor_factory=RealDictCursor
     )
 
-# Pydantic models
+# Pydantic models validate request and response payloads.
 class Feeding(BaseModel):
     cups: float
     notes: Optional[str] = None
@@ -40,9 +44,10 @@ class FeedingResponse(BaseModel):
     notes: Optional[str]
     timestamp: datetime
 
-# Initialize database
+# Initialize database at startup
 @app.on_event("startup")
 def startup():
+    """Ensure the feedings table exists before serving requests."""
     conn = get_db_connection()
     cur = conn.cursor()
     cur.execute("""
@@ -57,14 +62,16 @@ def startup():
     cur.close()
     conn.close()
 
-# Endpoints
+# API endpoints
 @app.post("/feedings", response_model=FeedingResponse)
 def create_feeding(feeding: Feeding):
+    """Create a new feeding record in the database."""
     conn = get_db_connection()
     cur = conn.cursor()
-    
+
+    # Use the provided timestamp, or default to now.
     timestamp = feeding.timestamp or datetime.now()
-    
+
     cur.execute(
         "INSERT INTO feedings (cups, notes, timestamp) VALUES (%s, %s, %s) RETURNING *",
         (feeding.cups, feeding.notes, timestamp)
@@ -73,14 +80,15 @@ def create_feeding(feeding: Feeding):
     conn.commit()
     cur.close()
     conn.close()
-    
+
     return result
 
 @app.get("/feedings", response_model=List[FeedingResponse])
 def get_feedings(limit: int = 50):
+    """Return the most recent feeding records up to the provided limit."""
     conn = get_db_connection()
     cur = conn.cursor()
-    
+
     cur.execute(
         "SELECT * FROM feedings ORDER BY timestamp DESC LIMIT %s",
         (limit,)
@@ -88,14 +96,15 @@ def get_feedings(limit: int = 50):
     results = cur.fetchall()
     cur.close()
     conn.close()
-    
+
     return results
 
 @app.get("/feedings/stats")
 def get_stats():
+    """Return feeding totals grouped by date for the last 30 days."""
     conn = get_db_connection()
     cur = conn.cursor()
-    
+
     cur.execute("""
         SELECT 
             DATE(timestamp) as date,
@@ -109,9 +118,10 @@ def get_stats():
     results = cur.fetchall()
     cur.close()
     conn.close()
-    
+
     return {"stats": results}
 
 @app.get("/health")
 def health():
+    """Health check endpoint used to verify the service is running."""
     return {"status": "healthy"}

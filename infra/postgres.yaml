@@ -21,15 +21,6 @@ data:
   POSTGRES_DB: dogfeeding
   POSTGRES_USER: postgres
 ---
-apiVersion: v1
-kind: Secret
-metadata:
-  name: postgres-secret
-  namespace: default
-type: Opaque
-stringData:
-  POSTGRES_PASSWORD: mysecretpassword
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
