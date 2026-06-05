@@ -16,7 +16,7 @@ metadata:
   name: dog-feeding-api
   namespace: default
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: dog-feeding-api
@@ -25,6 +25,25 @@ spec:
       labels:
         app: dog-feeding-api
     spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            preference:
+              matchExpressions:
+              - key: node-role.kubernetes.io/control-plane
+                operator: DoesNotExist
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - dog-feeding-api
+              topologyKey: kubernetes.io/hostname
       containers:
       - name: api
         image: mervynvg/bramble-api:latest
