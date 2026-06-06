@@ -31,8 +31,6 @@ python3 scripts/transform_feedings.py --input docs/templates/import.csv --output
 
 ## How to Import into Postgres
 
-### Method 1: Pipe via kubectl exec (simplest)
-
 From the directory containing your CSV:
 
 ```bash
@@ -40,21 +38,7 @@ cd /home/mervyn/Desktop/bramble/docs/templates
 cat feedings-transformed.csv | kubectl exec -i deployment/postgres -- psql -U postgres -d dogfeeding -c "\COPY feedings (cups,notes,timestamp) FROM STDIN CSV HEADER;"
 ```
 
-### Method 2: Interactive psql (with kubectl exec)
-
-```bash
-kubectl exec -it deployment/postgres -- psql -U postgres -d dogfeeding
-```
-
-Then in the psql prompt (from the directory containing your CSV):
-
-```sql
-\copy feedings (cups,notes,timestamp) FROM 'feedings-transformed.csv' CSV HEADER;
-```
-
-Note: This only works if psql can resolve the relative path from where you ran `kubectl exec`.
-
-### Verification
+Verify
 
 ```bash
 kubectl exec deployment/postgres -- psql -U postgres -d dogfeeding -c "SELECT count(*) FROM feedings;"
