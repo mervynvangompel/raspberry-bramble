@@ -1,0 +1,5 @@
+# build image
+docker buildx build --platform linux/arm64 -f Dockerfile.frontend -t mervynvg/bramble-frontend:latest --push .
+
+# restart deployment
+kubectl rollout restart deployment/dog-feeding-frontend
