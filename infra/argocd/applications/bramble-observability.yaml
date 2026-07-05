@@ -1,0 +1,24 @@
+# infra/argocd/applications/bramble-observability.yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: bramble-observability
+  namespace: argocd
+spec:
+  project: default
+  sources:
+    - repoURL: https://grafana.github.io/helm-charts
+      chart: grafana
+      targetRevision: 10.5.15
+      helm:
+        releaseName: grafana
+        valueFiles:
+          - $values/infra/observability/grafana/grafana-values.yaml
+    - repoURL: https://github.com/mervynvangompel/raspberry-bramble.git
+      targetRevision: main
+      ref: values
+      path: infra/observability
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
+  syncPolicy: {}

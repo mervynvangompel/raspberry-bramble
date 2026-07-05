@@ -1,0 +1,15 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: bramble-app
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/mervynvangompel/raspberry-bramble.git
+    targetRevision: main
+    path: infra/app
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
+  syncPolicy: {}
