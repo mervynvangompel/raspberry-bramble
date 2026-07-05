@@ -1,6 +1,3 @@
-# grafana-values.yaml
-# Helm values overrides for Grafana on Bramble
-
 image:
   tag: "11.4.0"
 
