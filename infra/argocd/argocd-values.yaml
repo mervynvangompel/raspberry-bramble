@@ -1,0 +1,59 @@
+# argocd-values.yaml
+global:
+  domain: 192.168.68.11
+
+configs:
+  params:
+    server.insecure: "true"        # Traefik terminates on plain HTTP, no TLS redirect needed
+    server.basehref: "/argocd"
+    server.rootpath: "/argocd"
+  cm:
+    url: "http://192.168.68.11/argocd"
+
+# Not needed for a homelab single-user setup
+dex:
+  enabled: false
+
+notifications:
+  enabled: false
+
+# Trimmed resource requests for Pi 5 nodes
+controller:
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      memory: 512Mi
+
+repoServer:
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      memory: 256Mi
+
+server:
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      memory: 256Mi
+
+redis:
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      memory: 128Mi
+
+applicationSet:
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      memory: 128Mi
