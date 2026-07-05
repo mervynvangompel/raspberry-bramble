@@ -1,0 +1,36 @@
+# grafana-values.yaml
+# Helm values overrides for Grafana on Bramble
+
+image:
+  tag: "11.4.0"
+
+# Run on pi-worker1 where the USB storage is
+nodeSelector:
+  kubernetes.io/hostname: pi-worker1
+
+# Subpath config for Traefik ingress
+grafana.ini:
+  server:
+    domain: 192.168.68.11
+    root_url: "http://192.168.68.11/grafana/"
+    serve_from_sub_path: true
+  security:
+    allow_embedding: true
+
+# Persistent storage on USB stick
+persistence:
+  enabled: true
+  storageClassName: local-storage
+  accessModes:
+    - ReadWriteOnce
+  size: 5Gi
+  existingClaim: grafana-pvc
+
+# Resource limits appropriate for Raspberry Pi
+resources:
+  limits:
+    cpu: 200m
+    memory: 256Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
